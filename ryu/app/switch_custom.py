@@ -59,22 +59,22 @@ class CustomSwitch(app_manager.RyuApp):
             e = ethernet.ethernet(dst_mac, _src_mac, ethertype)
             return e
 
-      def _build_arp(self, opcode, dst_ip, src_ip):
-        if opcode == arp.ARP_REPLY:
-            _eth_dst_mac = self.ip_to_mac[dst_ip]
-            _arp_dst_mac = self.ip_to_mac[dst_ip]
-            _arp_src_mac = self.ip_to_mac[src_ip]
+    def _build_arp(self, opcode, dst_ip, src_ip):
+    if opcode == arp.ARP_REPLY:
+        _eth_dst_mac = self.ip_to_mac[dst_ip]
+        _arp_dst_mac = self.ip_to_mac[dst_ip]
+        _arp_src_mac = self.ip_to_mac[src_ip]
 
-        e = self._build_ether(ether.ETH_TYPE_ARP, _eth_dst_mac, _arp_src_mac)
-        a = arp.arp(hwtype=1, proto=ether.ETH_TYPE_IP, hlen=6, plen=4,
-                    opcode=opcode, src_mac=self.ip_to_mac[src_ip], src_ip=src_ip,
-                    dst_mac=_arp_dst_mac, dst_ip=dst_ip)
-        p = packet.Packet()
-        p.add_protocol(e)
-        p.add_protocol(a)
-        p.serialize()
+    e = self._build_ether(ether.ETH_TYPE_ARP, _eth_dst_mac, _arp_src_mac)
+    a = arp.arp(hwtype=1, proto=ether.ETH_TYPE_IP, hlen=6, plen=4,
+                opcode=opcode, src_mac=self.ip_to_mac[src_ip], src_ip=src_ip,
+                dst_mac=_arp_dst_mac, dst_ip=dst_ip)
+    p = packet.Packet()
+    p.add_protocol(e)
+    p.add_protocol(a)
+    p.serialize()
 
-        return p
+    return p
 
     def _arp_request(self):
         p = self._build_arp(arp.ARP_REQUEST, ip)
